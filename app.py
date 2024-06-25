@@ -17,7 +17,7 @@ def chat():
     user_input = request.json.get('message')
     if not user_input:
         return jsonify({'response': 'No input provided'})
-    s
+    
     chain = tools.get_chain()
     response = chain.invoke(user_input)
     
