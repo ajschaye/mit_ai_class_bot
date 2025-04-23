@@ -1,7 +1,8 @@
-
+import os
 import dotenv
 from flask import Flask, request, jsonify, send_from_directory
 from utils import tools
+from utils import retriever
 
 
 dotenv.load_dotenv()
@@ -26,6 +27,15 @@ def chat():
     return jsonify({'response' : response})
 
 if __name__ == '__main__':
+    if not os.path.exists('.env'):
+        raise FileNotFoundError("Please create a .env file in the root directory with the OPENAI_API_KEY variable set.")
+
+    count = len([entry for entry in os.scandir("data") if entry.is_file()])
+    if count == 0:
+        raise FileNotFoundError("Please add a pdf to the data folder.")
+    
+    retriever.rebuild_db()
+
     app.run(
         host='localhost',
         port=8888,
